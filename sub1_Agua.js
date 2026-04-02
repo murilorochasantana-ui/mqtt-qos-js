@@ -19,9 +19,9 @@ client.on("connect", (connack) => {
   // No QoS 1 com clean:false, você só precisa dar subscribe uma vez na vida.
   // Mas deixar aqui garante que o tópico seja assinado na primeira execução.
   
-  client.subscribe("aula/qos", { qos: 1 });
+  client.subscribe("Agua/qos", { qos: 1 });
 });
 
 client.on("message", (topic, msg) => {
-  console.log("SUB QoS1 recebeu:", msg.toString());
+  console.log("Nivel de água:", msg.toString());
 });
