@@ -1,6 +1,16 @@
 import mqtt from "mqtt";
 
-const client = mqtt.connect("mqtt://localhost:1883");
+const options = {
+  clientId: "sensor_agua",
+  will: {
+    topic: "Agua/status",
+    payload: "Sensor AGUA desconectado inesperadamente",
+    qos: 1,
+    retain: true
+  }
+};
+
+const client = mqtt.connect("mqtt://localhost:1883", options);
 
 client.on("connect", () => {
   console.log("Sensor Água conectado");
