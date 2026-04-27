@@ -2,5 +2,8 @@
   "name": "mqtt-qos-aula",
   "version": "1.0.0",
   "type": "module",
-  "dependencies": { "mqtt": "^5.0.0" }
+  "dependencies": {
+    "mqtt": "^5.0.0",
+    "node-red-dashboard": "^3.6.6"
+  }
 }

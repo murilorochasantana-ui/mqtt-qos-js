@@ -1,28 +1,54 @@
 import mqtt from "mqtt";
 
-const options = {
-  clientId: "sensor_fogo",
+// HiveMQ Cloud
+const hive = mqtt.connect("mqtts://3abdfe0bbb5346db8e6ce05fc4cfd469.s1.eu.hivemq.cloud:8883", {
+  clientId: "sensor_fogo_hive_" + Math.random().toString(16).slice(2),
+  username: "murilo",
+  password: "Murilo1!",
+  clean: true,
   will: {
     topic: "Fogo/status",
-    payload: "Sensor FOGO desconectado inesperadamente",
+    payload: "Sensor FOGO desconectado inesperadamente - HiveMQ",
     qos: 2,
     retain: true
   }
-};
+});
 
-const client = mqtt.connect("mqtt://localhost:1883", options);
+// Mosquitto local
+const mosquitto = mqtt.connect("mqtt://localhost:1883", {
+  clientId: "sensor_fogo_mosquitto_" + Math.random().toString(16).slice(2),
+  clean: true,
+  will: {
+    topic: "Fogo/status",
+    payload: "Sensor FOGO desconectado inesperadamente - Mosquitto",
+    qos: 2,
+    retain: true
+  }
+});
 
-client.on("connect", () => {
-  console.log("Sensor Incêndio conectado");
+hive.on("connect", () => {
+  console.log("Conectado ao HiveMQ Cloud");
+});
 
-  setInterval(() => {
-    const detectouFogo = Math.random() < 0.5;
+mosquitto.on("connect", () => {
+  console.log("Conectado ao Mosquitto local");
+});
 
-    if (detectouFogo) {
-      client.publish("Fogo/qos", "FOGO DETECTADO", { qos: 2 });
-      console.log("ALERTA: FOGO DETECTADO!");
-    } else {
-      console.log("Sem incêndio...");
-    }
-  }, 5000);
+setInterval(() => {
+  const detectouFogo = Math.random() < 0.5;
+
+  const mensagem = detectouFogo ? "FOGO DETECTADO" : "Sem fogo";
+
+  hive.publish("Fogo/qos", mensagem, { qos: 2 });
+  mosquitto.publish("Fogo/qos", mensagem, { qos: 2 });
+
+  console.log("Mensagem enviada:", mensagem);
+}, 5000);
+
+hive.on("error", (err) => {
+  console.error("Erro HiveMQ:", err.message);
+});
+
+mosquitto.on("error", (err) => {
+  console.error("Erro Mosquitto:", err.message);
 });

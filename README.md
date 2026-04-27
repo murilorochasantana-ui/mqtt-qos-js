@@ -1,4 +1,3 @@
-# mqtt-qos-js
 
 O Last Will (LWT) é uma forma de avisar quando um cliente “cai” inesperadamente.
 Quando um cliente conecta no broker, ele pode deixar configurada uma mensagem. Se esse cliente perder a conexão de forma inesperada, o broker envia essa mensagem automaticamente em um tópico.
